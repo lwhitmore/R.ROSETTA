@@ -1,6 +1,6 @@
 plotMeanROC <- function(out){
   
-  ROC.stats <- out$ROC.stats
+  ROC.stats <- out$ROCstats
   OMSpec <- rowMeans(unstack(ROC.stats, form = OneMinusSpecificity ~ CVNumber))
   Sens <- rowMeans(unstack(ROC.stats, form = Sensitivity ~ CVNumber))
   
