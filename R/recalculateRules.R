@@ -12,21 +12,18 @@ recalculateRules <- function(dt, rules, discrete=FALSE, pAdjust=TRUE, pAdjustMet
   objs <- rownames(dt)
   feats <- colnames(dt)
   cuts <- rules[,grep('cut', colnames(rules), value=TRUE)][,-1]
-  
+  cuts <- data.frame(cuts)
   ### functions ###
   less2Vec <- function(x,y){(x-y) <= 0}
   more2Vec <- function(x,y){(x-y) >= 0}
   eqal2Vec <- function(x,y){(x-y) == 0}
   ### ### ### ### ###
-  
   if(discrete){
     ####discretized
     for(j in 1:dim(rules)[1]){
-      
       cnds <- cnd2[[j]]
       cndsLen <- length(cnds)
       vec3 <- list()
-      
       for(i in 1:cndsLen){
         vec3[[i]] <- as.numeric(as.data.frame(dt[,match(rl2[[j]], feats)])[,i] == cnd2[[j]][i])
         #ifelse(length(vec4) == 0, vec4 <- vec3, vec4 <- vec3 & vec4)
@@ -37,7 +34,6 @@ recalculateRules <- function(dt, rules, discrete=FALSE, pAdjust=TRUE, pAdjustMet
     } 
   }else{
     outLst <- outLst2 <- list()
-    
     for(j in 1:dim(rules)[1]){
       cnds <- cnd2[[j]]
       cnds[cnds == "value>cut"] <- 1
@@ -47,9 +43,7 @@ recalculateRules <- function(dt, rules, discrete=FALSE, pAdjust=TRUE, pAdjustMet
       cndsLen <- length(cnds)
       cndsCS <- cumsum(cnds)
       vec4 <- c()
-      
       for(i in 1:cndsLen){
-        
         if(cnd2[[j]][i] == "value>cut"){
           vec3 <- more2Vec(as.data.frame(dt[,match(rl2[[j]], feats)])[,i], as.numeric(cuts[j,][cndsCS[i]]))
           ifelse(length(vec4) == 0, vec4 <- vec3, vec4 <- vec3 & vec4)
