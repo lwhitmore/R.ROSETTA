@@ -3,9 +3,7 @@ recalculateRules <- function(dt, rules, discrete=FALSE, pAdjust=TRUE, pAdjustMet
   rl2 <- strsplit(as.character(rules$features), ",", fixed = T)
   
   if(discrete){
-    print(as.character(rules$levels))
     cnd2 <- strsplit(as.character(rules$levels), ",", fixed = T)
-    print(cnd2)
   }else{
     cnd2 <- strsplit(as.character(rules$cuts), ",", fixed = T)
   }
@@ -25,8 +23,6 @@ recalculateRules <- function(dt, rules, discrete=FALSE, pAdjust=TRUE, pAdjustMet
     outLst <- outLst2 <- list()
     ####discretized
     for(j in 1:dim(rules)[1]){
-      print("rules")
-      print(j)
       cnds <- cnd2[[j]]
       cndsLen <- length(cnds)
       vec3 <- list()
