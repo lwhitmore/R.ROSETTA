@@ -34,7 +34,8 @@ rosetta <- function(dt,
                     calibration=FALSE,
                     fillNA=FALSE,
                     fillNAmethod="meanMode",
-                    remSpChars=FALSE)
+                    remSpChars=FALSE,
+                    tmpdir=TRUE)
 {
 # set seed
 set.seed(seed)
@@ -695,7 +696,9 @@ df_out4 <- df_out3[order(df_out3$pValue,decreasing = F),]
 # reset row names
 rownames(df_out4) <- NULL
 # clear the files in temporary directory
-unlink(tempDirNam, recursive = TRUE)
+if(is.TRUE(tmpdir)) {
+  unlink(tempDirNam, recursive = TRUE)
+}
 # output results
   if(underSample == TRUE){
     ifelse(roc, return(list(main=df_out4, quality=outRos, ROC.stats=combined_df2, usMeanAccs=dfRes_accMean, usn=underSampleNum)),
