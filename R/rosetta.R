@@ -696,7 +696,7 @@ df_out4 <- df_out3[order(df_out3$pValue,decreasing = F),]
 # reset row names
 rownames(df_out4) <- NULL
 # clear the files in temporary directory
-if(is.TRUE(tmpdir)) {
+if(isTRUE(tmpdir)) {
   unlink(tempDirNam, recursive = TRUE)
 }
 # output results
