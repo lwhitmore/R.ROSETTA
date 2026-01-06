@@ -177,6 +177,7 @@ if(underSample == TRUE)
           out[j] <- i
     }
         underSampleNum <- round(mean(unlist(out)))
+        message("Undersample number", underSampleNum)
   }
       
   # vector of the classes
