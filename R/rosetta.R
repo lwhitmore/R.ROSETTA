@@ -333,6 +333,8 @@ if(roc){
   dfRes_accMin<-dfRes_accMax<-dfRes_rocMean<-dfRes_rocMedian<-dfRes_rocStdDev<-
   dfRes_rocMin<-dfRes_rocMax<-dfRes_rocseMean<-dfRes_rocseMedian<-dfRes_rocseStdDev<-
   dfRes_rocseMin<-dfRes_rocseMax<-c()
+  combined_df <- data.frame()
+
     for(i in 1:length(LFout)){
       if(.Platform$OS.type=="unix"){
       path <- paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta")
@@ -343,7 +345,6 @@ if(roc){
       }
         
   rosres <- rosResults(path, roc)
-        
   # ROC AUC
   dfRes_rocAuc[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC"),2])))
   dfRes_rocAucSE[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC.SE"),2])))
@@ -370,17 +371,25 @@ if(roc){
   txt_files_ls <- list.files(path=path_rocs, pattern="*.txt", full.names = T) 
   # read txt files
   txt_files_df <- lapply(txt_files_ls, function(x) {read.table(file = x, fill=T)})
-  combined_df <- data.frame()
     for(k in 1:length(txt_files_df)){
-    combined_df <- rbind(combined_df,
-                         data.frame(rep(k, dim(as.data.frame(txt_files_df[[k]])[,1:7])[1]),
-                                    as.data.frame(txt_files_df[[k]])[,1:7]))
+      if (isTRUE(underSample)) {
+        combined_df <- rbind(combined_df,
+                          cbind(data.frame(rep(k, dim(as.data.frame(txt_files_df[[k]])[,1:7])[1]),
+                                      as.data.frame(txt_files_df[[k]])[,1:7]),rep(i, dim(as.data.frame(txt_files_df[[k]])[,1:7])[1])))
+      } else {
+        combined_df <- rbind(combined_df,
+                          data.frame(rep(k, dim(as.data.frame(txt_files_df[[k]])[,1:7])[1]),
+                                      as.data.frame(txt_files_df[[k]])[,1:7]))
+      }
     }
   }
-      
-combined_df2 <- as.data.frame(apply(as.matrix(combined_df[-which(combined_df[,2]=="%"),]), 2, as.numeric))
-colnames(combined_df2) <- c("CVNumber","OneMinusSpecificity","Sensitivity","Specificity","PPV","NPV","Accuracy","Threshold")
-
+  if (isTRUE(underSample)) {      
+        combined_df2 <- as.data.frame(apply(as.matrix(combined_df[-which(combined_df[,2]=="%"),]), 2, as.numeric))
+        colnames(combined_df2) <- c("CVNumber","OneMinusSpecificity","Sensitivity","Specificity","PPV","NPV","Accuracy","Threshold", "UnderSampleNum")
+  } else {
+    combined_df2 <- as.data.frame(apply(as.matrix(combined_df[-which(combined_df[,2]=="%"),]), 2, as.numeric))
+    colnames(combined_df2) <- c("CVNumber","OneMinusSpecificity","Sensitivity","Specificity","PPV","NPV","Accuracy","Threshold")
+  }
 # create output for quality
 outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStdDev),mean(dfRes_accMin),
   mean(dfRes_accMax),mean(dfRes_rocAuc),mean(dfRes_rocAucSE),mean(dfRes_rocMean), 
