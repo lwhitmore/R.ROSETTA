@@ -332,19 +332,26 @@ if(roc){
   dfRes_rocAucSE<-dfRes_rocAuc<-dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-
   dfRes_accMin<-dfRes_accMax<-dfRes_rocMean<-dfRes_rocMedian<-dfRes_rocStdDev<-
   dfRes_rocMin<-dfRes_rocMax<-dfRes_rocseMean<-dfRes_rocseMedian<-dfRes_rocseStdDev<-
-  dfRes_rocseMin<-dfRes_rocseMax<-c()
+  dfRes_rocseMin<-dfRes_rocseMax<-dfRes_precision<-dfRes_recall<-dfRes_f1score<-c()
   combined_df <- data.frame()
 
     for(i in 1:length(LFout)){
       if(.Platform$OS.type=="unix"){
       path <- paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta")
       path_rocs <- paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta/rocs")
+      path_logs <- paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta/logs")
       }else{
       path <- paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta")
       path_rocs <- paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta\\rocs")
+      path_logs <- paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta\\logs")
       }
         
-  rosres <- rosResults(path, roc)
+  rosres <- rosResults(path,path_logs, roc)
+  # PRECISION, RECALL AND F1 SCORE (LW)
+  dfRes_precision[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.precision"),2])))
+  dfRes_recall[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.recall"),2]))) 
+  dfRes_f1score[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.f1score"),2]))) 
+
   # ROC AUC
   dfRes_rocAuc[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC"),2])))
   dfRes_rocAucSE[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC.SE"),2])))
@@ -368,7 +375,7 @@ if(roc){
   dfRes_rocseMax[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC.SE.Maximum"),2])))
         
   # create list of text files
-  txt_files_ls <- list.files(path=path_rocs, pattern="*.txt", full.names = T) 
+  txt_files_ls <- list.files(path=path_rocs,path_logs=path_logs, pattern="*.txt", full.names = T) 
   # read txt files
   txt_files_df <- lapply(txt_files_ls, function(x) {read.table(file = x, fill=T)})
     for(k in 1:length(txt_files_df)){
@@ -395,11 +402,11 @@ outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStd
   mean(dfRes_accMax),mean(dfRes_rocAuc),mean(dfRes_rocAucSE),mean(dfRes_rocMean), 
   mean(dfRes_rocMedian),mean(dfRes_rocStdDev), mean(dfRes_rocMin), mean(dfRes_rocMax),
   mean(dfRes_rocseMean), mean(dfRes_rocseMedian),mean(dfRes_rocseStdDev), mean(dfRes_rocseMin),
-  mean(dfRes_rocseMax))
+  mean(dfRes_rocseMax), mean(dfRes_precision), mean(dfRes_recall), mean(dfRes_f1score))
       
   colnames(outRos) <- c("accuracyMean","accuracyMedian","accuracyStd","accuracyMin","accuracyMax",
   "ROC.AUC","ROC.AUC.SE","ROC.AUC.MEAN","ROC.AUC.MEDIAN","ROC.AUC.STDEV","ROC.AUC.MIN","ROC.AUC.MAX",
-  "ROC.AUC.SE.MEAN","ROC.AUC.SE.MEDIAN","ROC.AUC.SE.STDEV","ROC.AUC.SE.MIN","ROC.AUC.SE.MAX")
+  "ROC.AUC.SE.MEAN","ROC.AUC.SE.MEDIAN","ROC.AUC.SE.STDEV","ROC.AUC.SE.MIN","ROC.AUC.SE.MAX", "MEAN.precision", "MEAN.recall", "MEAN.f1score")
   rownames(outRos) <- ""
 }else{ #ROC False
 dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-c()

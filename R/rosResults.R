@@ -1,4 +1,4 @@
-rosResults<-function(path, roc){
+rosResults<-function(path, path_logs, roc){
   
   if(.Platform$OS.type=="unix")
   {
@@ -15,7 +15,24 @@ rosResults<-function(path, roc){
   
   stats2<-as.data.frame(as.matrix(stats)[,c(1,3)])
   colnames(stats2)<-c("Measure","Value")
-  
+
+  txt_files_ls <- list.files(path=path_logs, pattern="*.txt", full.names = T) 
+  precision <- c()
+  recall <- c()
+  f1score <- c()
+  for(k in 1:length(txt_files_ls)){
+        logs=read.table(txt_files_ls[k], fill=T)
+        precision <- c(precision, as.numeric(gsub("%", "", logs[nrow(logs), "V3"])))
+        r <- as.numeric(logs[nrow(logs)-3,"V4"])/(as.numeric(logs[nrow(logs)-3,"V4"])+as.numeric(logs[nrow(logs)-3,"V3"]))*100
+        recall <- c(recall, r)
+        f <- 2 *((as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*r)/(as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))+r))
+        f1score <- c(f1score, f)
+      }
+      stats2 <- rbind(stats2, c("MEAN.precision", mean(precision)))
+      stats2 <- rbind(stats2, c("MEAN.recall", mean(stats2)))
+      stats2 <- rbind(stats2, c("MEAN.f1score", mean(f1score)))
+
+
   ##MCC
   #cts<-statsTab[which(statsTab$V2=="|"),]
   #if(length(which(cts$V1=="Undefined"))!=0){
