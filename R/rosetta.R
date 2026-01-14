@@ -348,10 +348,14 @@ if(roc){
  
   classes <- levels(factor(dt$outcome))
   index_of_mainclass = which(classes==clroc)
+  print(class)
+  print (index_of_mainclass)
+  print(clroc)
   if (isTRUE(identical(index_of_mainclass, integer(0)))) {
     stop(message("clroc does not match any classes, please fix ", clroc))
   }
   else {
+    print (index_of_mainclass)
     index_of_mainclass = index_of_mainclass-1
   }
 

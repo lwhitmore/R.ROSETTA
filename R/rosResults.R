@@ -20,23 +20,17 @@ rosResults<-function(path, path_logs, roc, index_of_mainclass){
   precision <- c()
   recall <- c()
   f1score <- c()
-  if (index_of_mainclass==0) {
-    p_col="V2"
-    TP <- as.numeric(logs[nrow(logs)-4,"V3"])
-    FN <- as.numeric(logs[nrow(logs)-4,"V4"])
-     } else { 
-    p_col="V3"
-    TP <- as.numeric(logs[nrow(logs)-3,"V4"])
-    FN <- as.numeric(logs[nrow(logs)-3,"V3"])
-
-  }
   for(k in 1:length(txt_files_ls)){
         logs=read.table(txt_files_ls[k], fill=T)
         if (index_of_mainclass==0) {
-          p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))
+          print(index_of_mainclass)
+
+          p=as.numeric(gsub("%", "", logs[nrow(logs), "V2"]))
           TP <- as.numeric(logs[nrow(logs)-4,"V3"])
           FN <- as.numeric(logs[nrow(logs)-4,"V4"])
-          } else { 
+        } else { 
+          print ("test")
+          print(index_of_mainclass)
           p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))
           TP <- as.numeric(logs[nrow(logs)-3,"V4"])
           FN <- as.numeric(logs[nrow(logs)-3,"V3"])
