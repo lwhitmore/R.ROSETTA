@@ -375,7 +375,7 @@ if(roc){
   dfRes_rocseMax[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="ROC.AUC.SE.Maximum"),2])))
         
   # create list of text files
-  txt_files_ls <- list.files(path=path_rocs,path_logs=path_logs, pattern="*.txt", full.names = T) 
+  txt_files_ls <- list.files(path=path_rocs, pattern="*.txt", full.names = T) 
   # read txt files
   txt_files_df <- lapply(txt_files_ls, function(x) {read.table(file = x, fill=T)})
     for(k in 1:length(txt_files_df)){
