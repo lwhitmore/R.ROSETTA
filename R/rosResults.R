@@ -22,10 +22,11 @@ rosResults<-function(path, path_logs, roc){
   f1score <- c()
   for(k in 1:length(txt_files_ls)){
         logs=read.table(txt_files_ls[k], fill=T)
-        precision <- c(precision, as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01)
+        p <-  as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01
+        precision <- c(precision,p)
         r <- as.numeric(logs[nrow(logs)-3,"V4"])/(as.numeric(logs[nrow(logs)-3,"V4"])+as.numeric(logs[nrow(logs)-3,"V3"]))
         recall <- c(recall, r)
-        f <- 2 *(((as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01)*r)/(as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))+r))
+        f <- 2 *((p*r)/(p+r))
         f1score <- c(f1score, f)
       }
       stats2 <- rbind(stats2, c("MEAN.precision", mean(precision)))
