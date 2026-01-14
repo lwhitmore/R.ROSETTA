@@ -25,20 +25,19 @@ rosResults<-function(path, path_logs, roc, index_of_mainclass){
         if (index_of_mainclass==0) {
           print(index_of_mainclass)
 
-          p=as.numeric(gsub("%", "", logs[nrow(logs), "V2"]))
+          p=as.numeric(gsub("%", "", logs[nrow(logs), "V2"]))*.01
           TP <- as.numeric(logs[nrow(logs)-4,"V3"])
           FN <- as.numeric(logs[nrow(logs)-4,"V4"])
         } else { 
           print ("test")
           print(index_of_mainclass)
-          p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))
+          p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01
           TP <- as.numeric(logs[nrow(logs)-3,"V4"])
           FN <- as.numeric(logs[nrow(logs)-3,"V3"])
 
         }
-          p <-  as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01
         precision <- c(precision,p)
-        r <- as.numeric(logs[nrow(logs)-3,"V4"])/(as.numeric(logs[nrow(logs)-3,"V4"])+as.numeric(logs[nrow(logs)-3,"V3"]))
+        r <- TP/(TP+FN)
         recall <- c(recall, r)
         f <- 2 *((p*r)/(p+r))
         f1score <- c(f1score, f)
