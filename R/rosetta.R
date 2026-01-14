@@ -412,6 +412,12 @@ outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStd
 dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-c()
   for(i in 1:length(LFout)){
   path <- ifelse(.Platform$OS.type=="unix", paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta"), paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta"))
+  # PRECISION, RECALL AND F1 SCORE (LW)
+  dfRes_precision[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.precision"),2])))
+  dfRes_recall[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.recall"),2]))) 
+  dfRes_f1score[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.f1score"),2]))) 
+
+
   # ACCURACY
   dfRes_accMean[i] <- as.numeric(as.matrix(unname(rosResults(path, roc)$Value[1])))
   dfRes_accMedian[i] <- as.numeric(as.matrix(unname(rosResults(path, roc)$Value[2])))
@@ -421,7 +427,8 @@ dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-c()
   }
       
 outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStdDev),mean(dfRes_accMin),mean(dfRes_accMax))
-colnames(outRos)<-c("accuracyMean","accuracyMedian","accuracyStd","accuracyMin","accuracyMax")
+colnames(outRos)<-c("accuracyMean","accuracyMedian","accuracyStd","accuracyMin","accuracyMax", 
+    "MEAN.precision", "MEAN.recall", "MEAN.f1score")
 rownames(outRos)<-""
 }
 rules2 <- data.frame()
