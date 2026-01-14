@@ -38,9 +38,11 @@ rosResults<-function(path, path_logs, roc, index_of_mainclass){
         }
         precision <- c(precision,p)
         r <- TP/(TP+FN)
-        recall <- c(recall, r)
-        f <- 2 *((p*r)/(p+r))
-        f1score <- c(f1score, f)
+        if (!is.na(r)) {
+          recall <- c(recall, r)
+          f <- 2 *((p*r)/(p+r))
+          f1score <- c(f1score, f)
+        }
       }
       stats2 <- rbind(stats2, c("MEAN.precision", mean(precision)))
       stats2 <- rbind(stats2, c("MEAN.recall", mean(recall)))
