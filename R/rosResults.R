@@ -29,7 +29,7 @@ rosResults<-function(path, path_logs, roc){
         f1score <- c(f1score, f)
       }
       stats2 <- rbind(stats2, c("MEAN.precision", mean(precision)))
-      stats2 <- rbind(stats2, c("MEAN.recall", mean(stats2)))
+      stats2 <- rbind(stats2, c("MEAN.recall", mean(recall)))
       stats2 <- rbind(stats2, c("MEAN.f1score", mean(f1score)))
 
 
