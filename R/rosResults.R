@@ -1,4 +1,4 @@
-rosResults<-function(path, path_logs, roc){
+rosResults<-function(path, path_logs, roc, index_of_mainclass){
   
   if(.Platform$OS.type=="unix")
   {
@@ -20,9 +20,29 @@ rosResults<-function(path, path_logs, roc){
   precision <- c()
   recall <- c()
   f1score <- c()
+  if (index_of_mainclass==0) {
+    p_col="V2"
+    TP <- as.numeric(logs[nrow(logs)-4,"V3"])
+    FN <- as.numeric(logs[nrow(logs)-4,"V4"])
+     } else { 
+    p_col="V3"
+    TP <- as.numeric(logs[nrow(logs)-3,"V4"])
+    FN <- as.numeric(logs[nrow(logs)-3,"V3"])
+
+  }
   for(k in 1:length(txt_files_ls)){
         logs=read.table(txt_files_ls[k], fill=T)
-        p <-  as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01
+        if (index_of_mainclass==0) {
+          p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))
+          TP <- as.numeric(logs[nrow(logs)-4,"V3"])
+          FN <- as.numeric(logs[nrow(logs)-4,"V4"])
+          } else { 
+          p=as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))
+          TP <- as.numeric(logs[nrow(logs)-3,"V4"])
+          FN <- as.numeric(logs[nrow(logs)-3,"V3"])
+
+        }
+          p <-  as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01
         precision <- c(precision,p)
         r <- as.numeric(logs[nrow(logs)-3,"V4"])/(as.numeric(logs[nrow(logs)-3,"V4"])+as.numeric(logs[nrow(logs)-3,"V3"]))
         recall <- c(recall, r)

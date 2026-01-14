@@ -345,8 +345,17 @@ if(roc){
       path_rocs <- paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta\\rocs")
       path_logs <- paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta\\logs")
       }
-        
-  rosres <- rosResults(path,path_logs, roc)
+ 
+  classes <- levels(factor(dt$outcome))
+  index_of_mainclass = which(classes==clroc)
+  if (isTRUE(identical(index_of_mainclass, integer(0)))) {
+    stop(message("clroc does not match any classes, please fix ", clroc))
+  }
+  else {
+    index_of_mainclass = index_of_mainclass-1
+  }
+
+  rosres <- rosResults(path,path_logs, roc, index_of_mainclass)
   # PRECISION, RECALL AND F1 SCORE (LW)
   dfRes_precision[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.precision"),2])))
   dfRes_recall[i] <- as.numeric(as.matrix(unname(rosres[which(rosres[,1]=="MEAN.recall"),2]))) 
@@ -415,7 +424,7 @@ outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStd
     combined_df2 <- combined_df2[combined_df2$UnderSampleNum==i, ]
   }
 }else{ #ROC False
-dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-c()
+dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-dfRes_precision<-dfRes_recall<- dfRes_f1score <-c()
   for(i in 1:length(LFout)){
   path <- ifelse(.Platform$OS.type=="unix", paste0(tempDirNam,"/results","/",LFout[i],"/outRosetta"), paste0(tempDirNam,"\\results","\\",LFout[i],"\\outRosetta"))
   # PRECISION, RECALL AND F1 SCORE (LW)
