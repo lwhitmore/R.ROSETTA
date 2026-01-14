@@ -408,6 +408,12 @@ outRos <- data.frame(mean(dfRes_accMean),mean(dfRes_accMedian),mean(dfRes_accStd
   "ROC.AUC","ROC.AUC.SE","ROC.AUC.MEAN","ROC.AUC.MEDIAN","ROC.AUC.STDEV","ROC.AUC.MIN","ROC.AUC.MAX",
   "ROC.AUC.SE.MEAN","ROC.AUC.SE.MEDIAN","ROC.AUC.SE.STDEV","ROC.AUC.SE.MIN","ROC.AUC.SE.MAX", "MEAN.precision", "MEAN.recall", "MEAN.f1score")
   rownames(outRos) <- ""
+
+  if (isTRUE(underSample)) {      
+    closest_val <- dfRes_rocAuc[which.min(abs(dfRes_rocAuc - mean(dfRes_rocAuc)))]
+    i = which(dfRes_rocAuc == closest_val)
+    combined_df2 <- combined_df2[combined_df2$UnderSampleNum==i, ]
+  }
 }else{ #ROC False
 dfRes_accMean<-dfRes_accMedian<-dfRes_accStdDev<-dfRes_accMin<-dfRes_accMax<-c()
   for(i in 1:length(LFout)){
