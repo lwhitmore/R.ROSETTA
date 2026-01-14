@@ -25,7 +25,7 @@ rosResults<-function(path, path_logs, roc){
         precision <- c(precision, as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01)
         r <- as.numeric(logs[nrow(logs)-3,"V4"])/(as.numeric(logs[nrow(logs)-3,"V4"])+as.numeric(logs[nrow(logs)-3,"V3"]))
         recall <- c(recall, r)
-        f <- 2 *((as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*r)/(as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))+r))
+        f <- 2 *(((as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))*.01)*r)/(as.numeric(gsub("%", "", logs[nrow(logs), "V3"]))+r))
         f1score <- c(f1score, f)
       }
       stats2 <- rbind(stats2, c("MEAN.precision", mean(precision)))
