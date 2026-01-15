@@ -20,7 +20,7 @@ plotMeanROC <- function(out, col="orangered3", backCol="snow2"){
     df <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
     for (n in names(df)) {
       df[[n]] <- df[[n]][1:min(checklengths)]
-      dfoms[[n]] <- df[[n]][1:min(checklengths)]
+      dfoms[[n]] <- dfoms[[n]][1:min(checklengths)]
     }
     dfoms <- as.data.frame(dfoms)
     df <- as.data.frame(df)
