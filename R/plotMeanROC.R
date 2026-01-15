@@ -16,10 +16,10 @@ plotMeanROC <- function(out, col="orangered3", backCol="snow2"){
     Sens <- rowMeans(unstack(ROCstats, form = Sensitivity ~ CVNumber))
   } else { 
     message("STATUS: CV lengths not the same")
-    dfoms <- unstack(ROCstats1, form = OneMinusSpecificity ~ CVNumber)
-    df <- unstack(ROCstats1, form = Sensitivity ~ CVNumber)
+    dfoms <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
+    df <- unstack(ROCstats, form = Sensitivity ~ CVNumber)
     for (n in names(df)) {
-      df[[n]] <- df[[n]][1:min(checklengths)]  
+      df[[n]] <- df[[n]][1:min(checklengths)]
       dfoms[[n]] <- dfoms[[n]][1:min(checklengths)]
     }
     dfoms <- as.data.frame(dfoms)
