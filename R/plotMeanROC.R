@@ -16,16 +16,18 @@ plotMeanROC <- function(out, col="orangered3", backCol="snow2"){
     Sens <- rowMeans(unstack(ROCstats, form = Sensitivity ~ CVNumber))
   } else { 
     message("STATUS: CV lengths not the same")
-    dfoms <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
-    df <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
+    dfoms <- unstack(ROCstats1, form = OneMinusSpecificity ~ CVNumber)
+    df <- unstack(ROCstats1, form = Sensitivity ~ CVNumber)
     for (n in names(df)) {
-      df[[n]] <- df[[n]][1:min(checklengths)]
+      df[[n]] <- df[[n]][1:min(checklengths)]  
       dfoms[[n]] <- dfoms[[n]][1:min(checklengths)]
     }
     dfoms <- as.data.frame(dfoms)
     df <- as.data.frame(df)
-    OMSpec <- rowMeans(dfoms)
-    Sens <- rowMeans(df)
+    OMSpec1 <- rowMeans(dfoms)
+    Sens1 <- rowMeans(df)
+    OMSpec1 <- OMSpec1[order(OMSpec1)]
+    Sens1 <- Sens1[order(Sens1)]
   }
   ## plotting with new colours
   plot(OMSpec, Sens, type = "l", lwd=3, col=col, xlab="1 - specificity (FPR)", ylab="sensitivity (TPR)", axes=F, cex.lab=1.5)
