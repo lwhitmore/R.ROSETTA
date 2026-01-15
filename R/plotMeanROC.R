@@ -22,6 +22,8 @@ plotMeanROC <- function(out, col="orangered3", backCol="snow2"){
       df[[n]] <- df[[n]][1:min(checklengths)]
       dfoms[[n]] <- df[[n]][1:min(checklengths)]
     }
+    dfoms <- as.data.frame(dfoms)
+    df <- as.data.frame(df)
     OMSpec <- rowMeans(dfoms)
     Sens <- rowMeans(df)
   }
