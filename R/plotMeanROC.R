@@ -5,10 +5,26 @@ plotMeanROC <- function(out, col="orangered3", backCol="snow2"){
   if(is.null(ROCstats)){
   ROCstats <- out$ROC.stats  
   }
-  
-  OMSpec <- rowMeans(unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber))
-  Sens <- rowMeans(unstack(ROCstats, form = Sensitivity ~ CVNumber))
-  
+  df <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
+  checklengths <- c()
+  for (n in names(df)) {
+    checklengths <- c(checklengths, length(df[[n]]))
+  }
+  checklengths <- unique(checklengths)
+  if (length(checklengths)==1) {
+    OMSpec <- rowMeans(unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber))
+    Sens <- rowMeans(unstack(ROCstats, form = Sensitivity ~ CVNumber))
+  } else { 
+    message("STATUS: CV lengths not the same")
+    dfoms <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
+    df <- unstack(ROCstats, form = OneMinusSpecificity ~ CVNumber)
+    for (n in names(df)) {
+      df[[n]] <- df[[n]][1:min(checklengths)]
+      dfoms[[n]] <- df[[n]][1:min(checklengths)]
+    }
+    OMSpec <- rowMeans(dfoms)
+    Sens <- rowMeans(df)
+  }
   ## plotting with new colours
   plot(OMSpec, Sens, type = "l", lwd=3, col=col, xlab="1 - specificity (FPR)", ylab="sensitivity (TPR)", axes=F, cex.lab=1.5)
   polygon(c(1,OMSpec), c(0,Sens), lwd=0.01, col=backCol)
